@@ -19,6 +19,10 @@ In addition to this [`README.md`](README.md), the following documents are also a
 - [`enterprise.md`](docs/enterprise.md) &ndash; A summary of various features and tips for making the application usable in enterprise settings.
 - [`netquirk.md`](docs/netquirk.md) &ndash; A description of various networking quirks and "kill-switch" semantics.
 
+## Auto Connect
+
+If you are interested in the wireguard AutoConnect feature, please see [this site](https://slowbootkernelhacks.blogspot.com/2025/08/wireguard-windows.html).
+
 ## License
 
 This repository is MIT-licensed.
