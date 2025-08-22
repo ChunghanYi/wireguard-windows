@@ -55,6 +55,7 @@ const (
 	QuitMethodType
 	UpdateStateMethodType
 	UpdateMethodType
+	AutoConnectMethodType //AutoConnect
 )
 
 var (
@@ -430,6 +431,27 @@ func IPCClientUpdate() error {
 
 	return rpcEncoder.Encode(UpdateMethodType)
 }
+
+// AutoConnect --
+func IPCClientAutoConnect(acserver *ACServerInfo) (acState bool, err error) {
+	rpcMutex.Lock()
+	defer rpcMutex.Unlock()
+
+	err = rpcEncoder.Encode(AutoConnectMethodType)
+	if err != nil {
+		return
+	}
+	err = rpcEncoder.Encode(*acserver)
+	if err != nil {
+		return
+	}
+	err = rpcDecoder.Decode(&acState)
+	if err != nil {
+		return
+	}
+	return
+}
+//-- -- --
 
 func IPCClientRegisterTunnelChange(cb func(tunnel *Tunnel, state, globalState TunnelState, err error)) *TunnelChangeCallback {
 	s := &TunnelChangeCallback{cb}

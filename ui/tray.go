@@ -83,6 +83,10 @@ func (tray *Tray) setup() error {
 		{separator: true},
 		{label: l18n.Sprintf("&Manage tunnels…"), handler: tray.onManageTunnels, enabled: true, defawlt: true},
 		{label: l18n.Sprintf("&Import tunnel(s) from file…"), handler: tray.onImport, enabled: true, hidden: !IsAdmin},
+		//AutoConnect --
+		{separator: true},
+		{label: l18n.Sprintf("&Auto Connect…"), handler: tray.onAutoConnect, enabled: true},
+		//-- -- --
 		{separator: true},
 		{label: l18n.Sprintf("&About WireGuard…"), handler: tray.onAbout, enabled: true},
 		{label: l18n.Sprintf("E&xit"), handler: onQuit, enabled: true, hidden: !IsAdmin},
@@ -377,6 +381,16 @@ func (tray *Tray) onManageTunnels() {
 	tray.mtw.tabs.SetCurrentIndex(0)
 	raise(tray.mtw.Handle())
 }
+
+// AutoConnect --
+func (tray *Tray) onAutoConnect() {
+	if tray.mtw.Visible() {
+		onAutoConnect(tray.mtw)
+	} else {
+		onAutoConnect(nil)
+	}
+}
+//-- -- --
 
 func (tray *Tray) onAbout() {
 	if tray.mtw.Visible() {

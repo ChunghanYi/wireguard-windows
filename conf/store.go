@@ -140,3 +140,20 @@ func DeleteName(name string) error {
 func (config *Config) Delete() error {
 	return DeleteName(config.Name)
 }
+
+// AutoConnect --
+func DeleteUnencryptedName(name string) error {
+	if !TunnelNameIsValid(name) {
+		return errors.New("Tunnel name is not valid")
+	}
+	configFileDir, err := tunnelConfigurationsDirectory()
+	if err != nil {
+		return err
+	}
+	return os.Remove(filepath.Join(configFileDir, name+configFileUnencryptedSuffix))
+}
+
+func (config *Config) DeleteUnencrypted() error {
+	return DeleteUnencryptedName(config.Name)
+}
+//-- -- --

@@ -432,6 +432,7 @@ func (tp *TunnelsPage) onTunnelsViewItemActivated() {
 		if err != nil || (globalState != manager.TunnelStarted && globalState != manager.TunnelStopped) {
 			return
 		}
+
 		oldState, err := tp.listView.CurrentTunnel().Toggle()
 		if err != nil {
 			tp.Synchronize(func() {
@@ -538,6 +539,17 @@ func (tp *TunnelsPage) onDelete() {
 				}
 			})
 		}
+
+		// AutoConnect -- test code
+		/*
+		var acserver manager.ACServerInfo
+		if !manager.GetACServerInfo(&acserver.ServerIp, &acserver.ServerPort) {
+			acserver.ServerIp = "192.168.8.235"
+			acserver.ServerPort = "51822"
+		}
+		manager.IPCClientAutoConnect(&acserver)
+		*/
+		//-- -- --
 	}()
 }
 

@@ -259,6 +259,18 @@ func (service *managerService) Execute(args []string, r <-chan svc.ChangeRequest
 		}()
 	}
 
+	//AutoConnect --
+	var serverIp, serverPort string
+	if !GetACServerInfo(&serverIp, &serverPort) {
+		serverIp = "192.168.8.235"
+		serverPort = "51822"
+		SetACServerInfo(serverIp, serverPort)
+	}
+	ACChannel = make(chan int)
+	go AC_Worker()
+	ACChannel <- AC_START
+	//-- -- --
+
 	go checkForUpdates()
 	go driver.UninstallLegacyWintun() // We uninstall opportunistically here, so that we don't have to carry around the uninstaller code forever.
 
@@ -269,6 +281,7 @@ func (service *managerService) Execute(args []string, r <-chan svc.ChangeRequest
 		serviceError = services.ErrorEnumerateSessions
 		return
 	}
+
 	for _, session := range unsafe.Slice(sessionsPointer, count) {
 		if session.State != windows.WTSActive && session.State != windows.WTSDisconnected {
 			continue
@@ -292,6 +305,9 @@ loop:
 		select {
 		case <-quitManagersChan:
 			uninstall = true
+			//AutoConnect --
+			ACChannel <- AC_STOP
+			//-- -- --
 			break loop
 		case c := <-r:
 			switch c.Cmd {

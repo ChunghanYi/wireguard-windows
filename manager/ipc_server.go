@@ -116,6 +116,7 @@ func (s *ManagerService) Start(tunnelName string) error {
 	if err != nil {
 		return err
 	}
+
 	return InstallTunnel(path)
 }
 
@@ -435,6 +436,22 @@ func (s *ManagerService) ServeConn(reader io.Reader, writer io.Writer) {
 			}
 		case UpdateMethodType:
 			s.Update()
+		// AutoConnect --
+		case AutoConnectMethodType:
+			var acserver ACServerInfo
+			err := decoder.Decode(&acserver)
+			if err != nil {
+				return
+			}
+			SetACServerInfo(acserver.ServerIp, acserver.ServerPort)
+
+			SendACChannel()
+			acState := true
+			err = encoder.Encode(acState)
+			if err != nil {
+				return
+			}
+		// -- -- --
 		default:
 			return
 		}
